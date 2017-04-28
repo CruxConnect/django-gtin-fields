@@ -83,3 +83,23 @@ def to_gtin14(value):
 upca_to_gtin14 = to_gtin14
 ean_to_gtin14 = to_gtin14
 gtin8_to_gtin14 = to_gtin14
+
+
+def to_ean(value):
+    """ Convert UPC-A (GTIN-12) to EAN-13.
+
+    See:
+        http://www.gtin.info/
+        https://www.nationwidebarcode.com/are-upc-a-and-ean-13-the-same/
+
+    Returns:
+      (str): An EAN-13 code.
+    """
+    return str(value).zfill(13)
+
+
+upca_to_ean = to_ean
+upca_to_ean13 = to_ean
+upca_to_gtin13= to_ean
+
+
