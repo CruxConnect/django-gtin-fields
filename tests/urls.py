@@ -1,4 +1,5 @@
 from django.conf.urls import include, url
+
 #import djangofoo.urls
 
 #urlpatterns = [

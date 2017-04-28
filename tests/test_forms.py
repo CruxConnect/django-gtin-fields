@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
-from gtin_fields.validators import ISBNValidator
-from gtin_fields import converters
 from django.test import SimpleTestCase
 
+from gtin_fields import converters
+from gtin_fields.validators import ISBNValidator
 
 # class ConvertersTest(SimpleTestCase):
     # """ Test the converters. """
@@ -38,4 +38,3 @@ from django.test import SimpleTestCase
 
         # # Valid ISBN13
         # ISBNValidator('9780765348272')
-
