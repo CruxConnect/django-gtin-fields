@@ -1,8 +1,11 @@
 ---
-This package is released under the LGPL.
+* This package is released under the LGPL.
 
-The package is templated off of django-isbn-field, which was also released
-under the same LGPL license.
+* django-gtin-fields was originally templated from django-isbn-field, which was
+  released under the LGPL license.
+
+* django-gtin-fields uses and also modifies some code from python-stdnum which
+  is also released under the LGPL license.
 ---
 
 

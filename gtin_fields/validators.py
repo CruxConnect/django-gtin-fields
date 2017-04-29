@@ -13,7 +13,7 @@ import re
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy
-from stdnum import ean
+from gtin_fields import gtin
 from stdnum import isbn
 
 
@@ -108,24 +108,21 @@ class _UPCAValidator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-12 / UPC-A code. """
     verbose_object_name = "UPC-A"
     valid_lengths = (12,)
-    is_valid_checksum = staticmethod(ean.is_valid)
+    is_valid_checksum = staticmethod(gtin.is_valid)
 
 
 class _EANValidator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-13 / EAN-13 code. """
     verbose_object_name = "EAN-13"
     valid_lengths = (13,)
-    is_valid_checksum = staticmethod(ean.is_valid)
+    is_valid_checksum = staticmethod(gtin.is_valid)
 
 
 class _GTIN14Validator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-14. """
-    verbose_object_name = "EAN-13"
+    verbose_object_name = "GTIN-14"
     valid_lengths = (14,)
-    is_valid_checksum = staticmethod(ean.is_valid)
-
-    def valid_checksum(self, value):
-        super().valid_checksum(value[1:])
+    is_valid_checksum = staticmethod(gtin.is_valid)
 
 
 ISBNValidator = _ISBNValidator().validate
