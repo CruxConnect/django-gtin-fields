@@ -7,7 +7,7 @@ Available validators:
     EANValidator (EAN-13 / GTIN-13)
     GTIN14Validator (GTIN-14)
     ASINValidator (Amazon Standard Identification Number, possible values)
-    ASINStrictValidator (Amazon Standard Identification Number, currently known values)
+    ASINStrictValidator (ASIN limiting to currently known patterns)
 """
 import re
 
@@ -22,8 +22,10 @@ class AlphaNumCodeValidatorBase:
 
     Expects the following attributes on self:
 
-        verbose_object_name (str): The human readable name of the thing being validated).
-        valid_lengths (anything that __contains__): The lengths that are valid.
+        verbose_object_name (str): The human readable name of the thing being
+            validated).
+        valid_lengths (anything that __contains__): The lengths that are
+            valid.
     """
     chartype_message = "Only alpha-numeric characters allowed."
     verbose_object_name = "Product Code"
@@ -47,17 +49,31 @@ class AlphaNumCodeValidatorBase:
             self.invalid(value, self.chartype_message)
 
     def error_msg(self, value, problem_description):
-        return "Invalid {} '{}': {}".format(self.verbose_object_name, value, problem_description)
+        return "Invalid {} '{}': {}".format(
+            self.verbose_object_name,
+            value, problem_description
+        )
 
     def invalid(self, value, problem_description):
-        raise ValidationError(ugettext_lazy(self.error_msg(value, problem_description)))
+        raise ValidationError(
+            ugettext_lazy(self.error_msg(value, problem_description))
+        )
 
 
 class _ASINValidator(AlphaNumCodeValidatorBase):
-    # valid as of 2017, see http://stackoverflow.com/a/12827734/422075
+    """ ASIN (Amazon Standard Identification Number) validator.
+
+    Loosely, an ASIN is merely a 10 digit alphanumeric code.  If initialized
+    with 'strict=True' then the validator will use known ASIN patterns for
+    validation.
+    """
     verbose_object_name = "ASIN"
+    # valid as of 2017, see http://stackoverflow.com/a/12827734/422075
     strict_regex = re.compile(r'^B[\dA-Z]{9}|\d{9}(X|\d)$')
-    strict_chartype_message = "Must start with 'B' and be alphanumeric, or all digits, or all digits with terminal 'X'"
+    strict_chartype_message = str(
+        "Must start with 'B' and be alphanumeric, "
+        "or all digits, or all digits with terminal 'X'"
+    )
     valid_lengths = (10,)
 
     def strict_valid_char_types(self, value):
@@ -76,7 +92,8 @@ class GTINValidatorBase(AlphaNumCodeValidatorBase):
 
     Expects the following attributes on self:
 
-        verbose_object_name (str): The human readable name of the thing being validated).
+        verbose_object_name (str): The human readable name of the thing being
+            validated.
         valid_lengths (anything that __contains__): The lengths that are valid.
         is_valid_checksum (callable): A static function returning a bool if
             given correct checksum.  Note: to prevent the function from being
@@ -125,7 +142,6 @@ class _GTIN14Validator(GTINValidatorBase):
     verbose_object_name = "GTIN-14"
     valid_lengths = (14,)
     is_valid_checksum = staticmethod(gtin.is_valid)
-
 
 
 ISBNValidator = _ISBNValidator().validate
