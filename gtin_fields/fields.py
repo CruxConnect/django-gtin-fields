@@ -1,49 +1,66 @@
 from django.db.models import CharField
 
-from .validators import ISBNValidator
+from gtin_fields import validators
 
 
-class ISBNField(CharField):
+class ProductCodeFieldBase(CharField):
+    """ Base class for all these product code fields.
 
+    Expects the variable _primary_validator (one of the
+    gtin_fields.validators) on self.  The _primary_validator object should
+    have 'valid_lengths' and 'verbose_object_name'.
+    """
     def __init__(self, *args, **kwargs):
-
-        # Max length is 13 chars for ISBN12
-        kwargs['max_length'] = 13
-        kwargs['verbose_name'] = u'ISBN'
-        kwargs['validators'] = [ISBNValidator]
-        super(ISBNField, self).__init__(*args, **kwargs)
+        new_kwargs = dict(
+            dict(
+                max_length=max(self._primary_validator.valid_lengths),
+                verbose_name=self._primary_validator.verbose_object_name,
+                validators=kwargs.get('validators', []).append(self._primary_validator),
+            ),
+            **kwargs
+        )
+        super().__init__(*args, **new_kwargs)
 
     def formfield(self, **kwargs):
-        defaults = {
-            'max_length': 13,
-            'min_length': 10,
-            'validators': [ISBNValidator],
-        }
-        defaults.update(kwargs)
-        return super(ISBNField, self).formfield(**defaults)
+        new_kwargs = dict(
+            dict(
+                max_length=max(self._primary_validator.valid_lengths),
+                min_length=min(self._primary_validator.valid_lengths),
+                validators=[self._primary_validator],
+            )
+            **kwargs
+        )
+        return super().formfield(**new_kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.value
 
 
-class UPCField(CharField):
+class ISBNField(ProductCodeFieldBase):
+    _primary_validator = validators.ISBNValidator
+
+
+class UPCAField(ProductCodeFieldBase):
+    _primary_validator = validators.UPCAValidator
+
+
+class EAN13Field(ProductCodeFieldBase):
+    _primary_validator = validators.EAN13Validator
+
+
+class GTIN14Field(ProductCodeFieldBase):
+    _primary_validator = validators.GTIN14Validator
+
+
+class ASINField(ProductCodeFieldBase):
+    """ Amazon Standard Identification Number field.
+
+    If initialized with strict=True then will use the ASINStrictValidator,
+    otherwise ASINValidator.
+    """
+    _primary_validator = validators.ASINValidator
 
     def __init__(self, *args, **kwargs):
-
-        # Max length is 13 chars for ISBN12
-        kwargs['max_length'] = 12
-        kwargs['verbose_name'] = u'UPC-A'
-        kwargs['validators'] = [UPCValidator]
-        super(UPCField, self).__init__(*args, **kwargs)
-
-    def formfield(self, **kwargs):
-        defaults = {
-            'max_length': 12,
-            'min_length': 6,
-            'validators': [UPCValidator],
-        }
-        defaults.update(kwargs)
-        return super(UPCField, self).formfield(**defaults)
-
-    def __unicode__(self):
-        return self.value
+        if kwargs.get('strict', None)
+            self._primary_validator = validators.ASINStrictValidator
+        super().__init__(*args, **kwargs)

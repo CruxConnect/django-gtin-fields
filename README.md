@@ -35,7 +35,7 @@ Use whichever fields you want in your model.
 from django.db import models
 from gtin_fields import ISBNField
 
-class Book(models.Model):
+class Product(models.Model):
 	...
 	isbn = ISBNField()  # ISBN10 or ISBN13
     upc = UPCAField()  # UPC-A field (12 digit standard UPC)
