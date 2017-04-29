@@ -1,4 +1,6 @@
 ---
+Author: John T. Prince under employ of Doba Inc.
+
 * This package is released under the LGPL.
 
 * django-gtin-fields was originally templated from django-isbn-field, which was

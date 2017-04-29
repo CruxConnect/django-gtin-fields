@@ -5,12 +5,9 @@ should move ean.py to gtin.py.
 
 The code on this page is nearly identical to the stdnum/ean.py code.
 """
-from stdnum.ean import calc_check_digit
-from stdnum.ean import compact
-from stdnum.exceptions import InvalidChecksum
-from stdnum.exceptions import InvalidFormat
-from stdnum.exceptions import InvalidLength
-from stdnum.exceptions import ValidationError
+from stdnum.ean import calc_check_digit, compact
+from stdnum.exceptions import (InvalidChecksum, InvalidFormat, InvalidLength,
+                               ValidationError)
 
 
 def validate(number):

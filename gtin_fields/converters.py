@@ -101,5 +101,3 @@ def to_ean(value):
 upca_to_ean = to_ean
 upca_to_ean13 = to_ean
 upca_to_gtin13= to_ean
-
-

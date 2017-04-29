@@ -4,10 +4,10 @@ Provides django model fields to store and validate commonly used GTIN related pr
 
 ## Requirements
 
-It has been tested on
+It has been tested on all combinations of:
 
-* Python >= 3.5
-* Django 1.10
+* Python 3.4, 3.5, 3.6
+* Django 1.8, 1.9, 1.10
 
 ## Installation
 
@@ -46,8 +46,8 @@ class Book(models.Model):
     asin = ASINField()  # Amazon Standard Identification Number
 ```
 
-Converters can help you coerce input between some kinds of input.  For
-example:
+Converters can help you coerce from some codes to some other desired codes.
+For example:
 
 ```python
 from gtin_fields import converters
@@ -81,3 +81,11 @@ It will raise ValidationError when the number provided is invalid
 * Get all fields working
 * Test all fields
 * Upload to pypi
+
+## Acknowledgments
+
+Code is built on the work of thousands of contributers, but of especial note:
+
+* github user 'secnot' for [django-isbn-field](https://github.com/secnot/django-isbn-field), which was used as initial template.
+* Arthur de Jong for [python-stdnum](https://github.com/arthurdejong/python-stdnum) (used for validation)
+* Tim Heap for great [pointers on django package testing](http://timheap.me/b/django-package-tests/).
