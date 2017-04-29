@@ -1,10 +1,11 @@
 # django-gtin-fields
 
-Provides django model fields to store and validate commonly used GTIN related product identifiers.
+Provides django model fields to store and validate commonly used GTIN related
+product identifiers.
 
 ## Requirements
 
-It has been tested on all combinations of:
+Tested on all combinations of:
 
 * Python 3.4, 3.5, 3.6
 * Django 1.8, 1.9, 1.10
@@ -84,7 +85,7 @@ It will raise ValidationError when the number provided is invalid
 
 ## Acknowledgments
 
-Code is built on the work of thousands of contributers, but of especial note:
+Built on the work of countless contributers, but of especial note:
 
 * github user 'secnot' for [django-isbn-field](https://github.com/secnot/django-isbn-field), which was used as initial template.
 * Arthur de Jong for [python-stdnum](https://github.com/arthurdejong/python-stdnum) (used for validation)

@@ -61,6 +61,6 @@ class ASINField(ProductCodeFieldBase):
     _primary_validator = validators.ASINValidator
 
     def __init__(self, *args, **kwargs):
-        if kwargs.get('strict', None)
+        if kwargs.get('strict', None):
             self._primary_validator = validators.ASINStrictValidator
         super().__init__(*args, **kwargs)

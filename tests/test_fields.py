@@ -5,7 +5,7 @@ from gtin_fields import converters
 from gtin_fields.validators import ISBNValidator
 
 
-class ISBNValidatorTest(SimpleTestCase):
+class ISBNFieldTest(SimpleTestCase):
 
     def test_validation(self):
         # Short
