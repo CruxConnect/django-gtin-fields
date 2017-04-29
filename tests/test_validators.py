@@ -11,7 +11,8 @@ class ValidatorTestMixin:
 
         self.invalid (list): List of values that will raise ValidationError
         self.valid (list): List of values that *not* raise ValidationError
-        self.validator (callable): The callable that takes the value to be validated.
+        self.validator (callable): The callable that takes the value to be
+            validated.
     """
     def test_validation(self):
         for value in self.invalid:
@@ -31,6 +32,7 @@ class ISBNValidatorTest(SimpleTestCase, ValidatorTestMixin):
             '111',  # short
             '12345678901234',  # long
             '0765348275',  # checksum error
+            '076534827X',  # bad character
         ]
 
         self.valid = [
@@ -111,6 +113,63 @@ class GTIN14ValidatorTest(SimpleTestCase, ValidatorTestMixin):
             '10123456000015',
             '70123456000017',
             '71123456000016',
+        ]
+
+        super().setUp()
+
+
+class ASINValidatorTest(SimpleTestCase, ValidatorTestMixin):
+
+    def setUp(self):
+        """ Accepts any alphanumeric characters in a 10 digit code.
+
+        This is the 'loose' definition of an ASIN (i.e., Amazon could start
+        using any codes within the alpha-numeric range).
+        """
+        self.validator = validators.ASINValidator
+
+        self.invalid = [
+            'B06Y125DW',  # short
+            'B06Y125DWZZ',  # long
+            'B06Y125-WZ',  # bad character
+            'B06Y125_WZ',  # bad character
+        ]
+
+        self.valid = [
+            'B06Y125DWZ',
+            'B01G29XQ30',
+            'B000N2HBSO',
+            '054792822X',
+            '0000000000',
+            'ZZZZZZZZZZ',
+        ]
+
+        super().setUp()
+
+
+class ASINStrictValidatorTest(SimpleTestCase, ValidatorTestMixin):
+    """ Test ASIN Validator . """
+
+    def setUp(self):
+        """ The ASINStrictValidator must follow conventional ASIN patterns. """
+        self.validator = validators.ASINStrictValidator
+
+        self.invalid = [
+            'B06Y125DW',  # short
+            'B06Y125DWZZ',  # long
+            'B06Y125-WZ',  # bad character
+            'B06Y125_WZ',  # bad character
+            'ZZZZZZZZZZ',  # doesn't start with 'B'
+        ]
+
+        self.valid = [
+            'B06Y125DWZ',
+            'B01G29XQ30',
+            'B000N2HBSO',
+            '054792822X',
+            '0000000000',
+            'B000000000',
+            '000000000X',
         ]
 
         super().setUp()

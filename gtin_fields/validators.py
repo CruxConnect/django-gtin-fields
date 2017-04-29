@@ -1,6 +1,6 @@
 """ Provides validation for common GTIN fields.
 
-Available fields:
+Available validators:
 
     ISBNValidator (ISBN)
     UPCAValidator (UPC-A / GTIN-12)
@@ -17,7 +17,7 @@ from gtin_fields import gtin
 from stdnum import isbn
 
 
-class ProductCodeValidatorBase:
+class AlphaNumCodeValidatorBase:
     """ A generic product code validator.
 
     Expects the following attributes on self:
@@ -36,31 +36,33 @@ class ProductCodeValidatorBase:
 
     def validate_type(self, value):
         if not isinstance(value, str):
-            self.invalid("Not a string")
+            self.invalid(value, "Not a string")
 
     def validate_length(self, value):
         if len(value) not in self.valid_lengths:
-            self.invalid("Wrong length")
+            self.invalid(value, "Wrong length")
 
     def validate_character_types(self, value):
-        if not value.alnum():
-            self.invalid(self.chartype_message)
+        if not value.isalnum():
+            self.invalid(value, self.chartype_message)
 
-    def error_msg(self, problem_description):
-        return "Invalid {}: {}".format(self.verbose_object_name, problem_description)
+    def error_msg(self, value, problem_description):
+        return "Invalid {} '{}': {}".format(self.verbose_object_name, value, problem_description)
 
-    def invalid(self, problem_description):
-        raise ValidationError(ugettext_lazy(self.error_msg(problem_description)))
+    def invalid(self, value, problem_description):
+        raise ValidationError(ugettext_lazy(self.error_msg(value, problem_description)))
 
 
-class _ASINValidator(ProductCodeValidatorBase):
+class _ASINValidator(AlphaNumCodeValidatorBase):
     # valid as of 2017, see http://stackoverflow.com/a/12827734/422075
+    verbose_object_name = "ASIN"
     strict_regex = re.compile(r'^B[\dA-Z]{9}|\d{9}(X|\d)$')
     strict_chartype_message = "Must start with 'B' and be alphanumeric, or all digits, or all digits with terminal 'X'"
+    valid_lengths = (10,)
 
     def strict_valid_char_types(self, value):
         if not self.strict_regex.match(value):
-            self.invalid(self.strict_chartype_message)
+            self.invalid(value, self.strict_chartype_message)
 
     def __init__(self, *args, **kwargs):
         if kwargs.pop('strict', None):
@@ -69,7 +71,7 @@ class _ASINValidator(ProductCodeValidatorBase):
         super().__init__(*args, **kwargs)
 
 
-class GTINValidatorBase(ProductCodeValidatorBase):
+class GTINValidatorBase(AlphaNumCodeValidatorBase):
     """ Validation base for common GTIN codes.
 
     Expects the following attributes on self:
@@ -90,11 +92,11 @@ class GTINValidatorBase(ProductCodeValidatorBase):
 
     def validate_character_types(self, value):
         if not value.isdigit():
-            self.invalid(self.chartype_message)
+            self.invalid(value, self.chartype_message)
 
     def valid_checksum(self, value):
         if not self.is_valid_checksum(value):
-            self.invalid('Failed checksum')
+            self.invalid(value, 'Failed checksum')
 
 
 class _ISBNValidator(GTINValidatorBase):
