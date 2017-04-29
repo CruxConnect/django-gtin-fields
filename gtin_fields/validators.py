@@ -111,7 +111,7 @@ class _UPCAValidator(GTINValidatorBase):
     is_valid_checksum = staticmethod(gtin.is_valid)
 
 
-class _EANValidator(GTINValidatorBase):
+class _EAN13Validator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-13 / EAN-13 code. """
     verbose_object_name = "EAN-13"
     valid_lengths = (13,)
@@ -119,15 +119,16 @@ class _EANValidator(GTINValidatorBase):
 
 
 class _GTIN14Validator(GTINValidatorBase):
-    """ Check string is a well-formed GTIN-14. """
+    """ Check string is a well-formed GTIN-14 code. """
     verbose_object_name = "GTIN-14"
     valid_lengths = (14,)
     is_valid_checksum = staticmethod(gtin.is_valid)
 
 
+
 ISBNValidator = _ISBNValidator().validate
 UPCAValidator = _UPCAValidator().validate
-EANValidator = _EANValidator().validate
+EAN13Validator = _EAN13Validator().validate
 GTIN14Validator = _GTIN14Validator().validate
 ASINValidator = _ASINValidator().validate
 ASINStrictValidator = _ASINValidator(strict=True).validate

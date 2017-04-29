@@ -74,10 +74,10 @@ class UPCAValidatorTest(SimpleTestCase, ValidatorTestMixin):
         super().setUp()
 
 
-class EANValidatorTest(SimpleTestCase, ValidatorTestMixin):
+class EAN13ValidatorTest(SimpleTestCase, ValidatorTestMixin):
 
     def setUp(self):
-        self.validator = validators.EANValidator
+        self.validator = validators.EAN13Validator
 
         self.invalid = [
             '780471117094',  # short
@@ -97,7 +97,7 @@ class EANValidatorTest(SimpleTestCase, ValidatorTestMixin):
 class GTIN14ValidatorTest(SimpleTestCase, ValidatorTestMixin):
 
     def setUp(self):
-        self.validator = validators.EANValidator
+        self.validator = validators.GTIN14Validator
 
         self.invalid = [
             '0123456000018',  # short
