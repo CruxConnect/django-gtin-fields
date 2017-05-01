@@ -145,9 +145,17 @@ class _GTIN14Validator(GTINValidatorBase):
     is_valid_checksum = staticmethod(gtin.is_valid)
 
 
-ISBNValidator = _ISBNValidator().validate
-UPCAValidator = _UPCAValidator().validate
-EAN13Validator = _EAN13Validator().validate
-GTIN14Validator = _GTIN14Validator().validate
-ASINValidator = _ASINValidator().validate
-ASINStrictValidator = _ASINValidator(strict=True).validate
+ISBNValidator = _ISBNValidator()
+UPCAValidator = _UPCAValidator()
+EAN13Validator = _EAN13Validator()
+GTIN14Validator = _GTIN14Validator()
+ASINValidator = _ASINValidator()
+ASINStrictValidator = _ASINValidator(strict=True)
+
+
+ISBNValidatorFunc = ISBNValidator.validate
+UPCAValidatorFunc = UPCAValidator.validate
+EAN13ValidatorFunc = EAN13Validator.validate
+GTIN14ValidatorFunc = GTIN14Validator.validate
+ASINValidatorFunc = ASINValidator.validate
+ASINStrictValidatorFunc = ASINStrictValidator.validate

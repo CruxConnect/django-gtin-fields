@@ -7,7 +7,7 @@ class ProductCodeFieldBase(CharField):
     """ Base class for all these product code fields.
 
     Expects the variable _primary_validator (one of the
-    gtin_fields.validators) on self.  The _primary_validator object should
+    gtin_fields.validators) on self.  The _validator_class object should
     have 'valid_lengths' and 'verbose_object_name'.
     """
     def __init__(self, *args, **kwargs):
@@ -15,7 +15,7 @@ class ProductCodeFieldBase(CharField):
             dict(
                 max_length=max(self._primary_validator.valid_lengths),
                 verbose_name=self._primary_validator.verbose_object_name,
-                validators=kwargs.get('validators', []).append(self._primary_validator),
+                validators=kwargs.get('validators', []) + [self._primary_validator.validate],
             ),
             **kwargs
         )
@@ -26,7 +26,7 @@ class ProductCodeFieldBase(CharField):
             dict(
                 max_length=max(self._primary_validator.valid_lengths),
                 min_length=min(self._primary_validator.valid_lengths),
-                validators=[self._primary_validator],
+                validators=[self._primary_validator.validate],
             )
             **kwargs
         )
@@ -61,6 +61,6 @@ class ASINField(ProductCodeFieldBase):
     _primary_validator = validators.ASINValidator
 
     def __init__(self, *args, **kwargs):
-        if kwargs.get('strict', None):
+        if kwargs.pop('strict', None):
             self._primary_validator = validators.ASINStrictValidator
         super().__init__(*args, **kwargs)

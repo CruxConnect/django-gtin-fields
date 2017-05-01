@@ -1,27 +1,76 @@
 from django.core.exceptions import ValidationError
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 from gtin_fields import converters
 from gtin_fields.validators import ISBNValidator
+from tests.app.models import MockProduct
+from tests.product_codes import CODES
 
 
-class ISBNFieldTest(SimpleTestCase):
+class FieldTestMixin:
+    """ Test validation on full_clean.
 
-    def test_validation(self):
-        # Short
-        with self.assertRaises(ValidationError):
-            ISBNValidator('111')
+    Expects a couple variables to be defined on self:
 
-        # Long
-        with self.assertRaises(ValidationError):
-            ISBNValidator('12345678901234')
+        self.codes (dict): A dict with 'valid' and 'invalid' keys, each with an
+            iterable of valid and invalid codes.
+        self.key (str): The key for assigning the value on MockProduct (e.g.,
+            'isbn')
+    """
+    def test_full_clean(self):
+        """ Should not raise an error. """
+        for code in self.codes['valid']:
+            product = MockProduct(**{self.key: code})
+            product.full_clean()
 
-        # ISBN w Error
-        with self.assertRaises(ValidationError):
-            ISBNValidator('0765348275')
+        # assert to indicate that valid codes were in fact tested
+        self.assertTrue(self.codes)
 
-        # Valid ISBN10
-        ISBNValidator('0765348276')
+    def test_full_clean_on_invalid(self):
+        """ Should raise a ValidationError. """
+        for code in self.codes['invalid']:
+            with self.assertRaises(ValidationError):
+                product = MockProduct(**{self.key: code})
+                product.full_clean()
 
-        # Valid ISBN13
-        ISBNValidator('9780765348272')
+    def test_saving(self):
+        """ Can save all valid objects to the db. """
+        for code in self.codes['valid']:
+            product = MockProduct(**{self.key: code})
+            product.full_clean()
+            product.save()
+
+        self.assertEqual(
+            len(list(MockProduct.objects.all())),
+            len(self.codes['valid'])
+        )
+
+
+class ASINFieldTest(FieldTestMixin, TestCase):
+    key = 'asin'
+    codes = CODES['ASIN']
+
+
+class ASINStrictFieldTest(FieldTestMixin, TestCase):
+    key = 'asin_strict'
+    codes = CODES['ASIN_strict']
+
+
+class UPCAFieldTest(FieldTestMixin, TestCase):
+    key = 'upca'
+    codes = CODES['UPCA']
+
+
+class GTIN14FieldTest(FieldTestMixin, TestCase):
+    key = 'gtin14'
+    codes = CODES['GTIN14']
+
+
+class ISBNFieldTest(FieldTestMixin, TestCase):
+    key = 'isbn'
+    codes = CODES['ISBN']
+
+
+class EAN13FieldTest(FieldTestMixin, TestCase):
+    key = 'ean13'
+    codes = CODES['EAN13']
