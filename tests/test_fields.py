@@ -1,3 +1,6 @@
+""" Test fields. """
+from itertools import zip_longest
+
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
@@ -8,7 +11,7 @@ from tests.product_codes import CODES
 
 
 class FieldTestMixin:
-    """ Test validation on full_clean.
+    """ Test a Field for validationa and correct round-trip saving.
 
     Expects a couple variables to be defined on self:
 
@@ -40,10 +43,8 @@ class FieldTestMixin:
             product.full_clean()
             product.save()
 
-        self.assertEqual(
-            len(list(MockProduct.objects.all())),
-            len(self.codes['valid'])
-        )
+        for (code, obj) in zip_longest(self.codes['valid'], MockProduct.objects.all()):
+            self.assertEqual(getattr(obj, self.key), code)
 
 
 class ASINFieldTest(FieldTestMixin, TestCase):
