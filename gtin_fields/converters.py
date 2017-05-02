@@ -25,11 +25,20 @@ def upce_to_upca(upce, validate=True):
     given_upce = str(upce)
 
     # can safely zero pad left a seven digit upce (is missing its left zero)
-    padded_upce = '0' + given_upce if (len(given_upce) == 7) and (given_upce[0] != '0') else given_upce
+    if (len(given_upce) == 7) and (given_upce[0] != '0'):
+        pad = '0'
+    else:
+        pad = ''
+
+    padded_upce = pad + given_upce
 
     if validate:
         if len(padded_upce) not in (6, 8):
-            raise ValueError("Provided UPC-E must be 6 or 8 digits!")
+            raise ValueError(
+                "Provided UPC-E {} must be 6 or 8 digits!".format(
+                    repr(given_upce)
+                )
+            )
 
         if (len(padded_upce) == 8 and padded_upce[0] not in ('0', '1')):
             raise ValueError("8 digit UPC-E must begin with 0 or 1")
@@ -53,12 +62,13 @@ def upce_to_upca(upce, validate=True):
     # ab + core
     no_leader_no_checksum = ab_prefix + ''.join(map(str, core))
 
-    # add leader
-    leader = '0' if given_6_digit_upce else padded_upce[0]  # leader also called 'S' digit
+    # add leader, also called 'S' digit
+    leader = '0' if given_6_digit_upce else padded_upce[0]
     with_leader_no_checksum = leader + no_leader_no_checksum
 
     if given_6_digit_upce:
-        with_checksum = with_leader_no_checksum + ean.calc_check_digit(with_leader_no_checksum)
+        with_checksum = with_leader_no_checksum\
+            + ean.calc_check_digit(with_leader_no_checksum)
     else:
         with_checksum = with_leader_no_checksum + given_upce[-1]
         if validate:
@@ -68,9 +78,10 @@ def upce_to_upca(upce, validate=True):
 
 
 def to_gtin14(value):
-    """ Convert UPC-A (GTIN-12), GTIN-13 (EAN / UCC-13), GTIN-8 (EAN / UCC-8) to GTIN-14.
+    """ Convert various product codes to  to GTIN-14.
 
-    All the above codes are converted to GTIN-14 by left zero padding.
+    Will convert UPC-A (GTIN-12), GTIN-13 (EAN / UCC-13), GTIN-8 (EAN / UCC-8)
+    to GTIN-14 by left zero padding.
 
     See http://www.gtin.info/
 
@@ -100,4 +111,4 @@ def to_ean(value):
 
 upca_to_ean = to_ean
 upca_to_ean13 = to_ean
-upca_to_gtin13= to_ean
+upca_to_gtin13 = to_ean

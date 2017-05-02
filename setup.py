@@ -3,7 +3,10 @@ from setuptools import setup
 setup(
     name='django-gtin-fields',
     version='0.0.1',
-    description='Provides model fields and validation for GTIN codes (EAN, UPC, GTIN, ISBN)',
+    description=str(
+        'Provides model fields and validation for GTIN codes '
+        '(EAN, UPC, GTIN, ISBN)'
+    ),
 
     url='https://github.com/DobaTech/django-gtin-fields',
     author='John T. Prince, under employ of Doba Inc.',
@@ -20,15 +23,18 @@ setup(
         'Intended Audience :: Developers',
         'Environment :: Web Environment',
         'Framework :: Django',
-                'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
+        str(
+            'License :: OSI Approved :: '
+            'GNU Lesser General Public License v3 (LGPLv3)'
+        ),
         'Development Status :: 5 - Production/Stable',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3'
     ],
 
     # Package
-    packages = ['gtin_fields'],
-    install_requires = ['Django', 'python-stdnum>=1.5', 'six'],
-    zip_safe = False,
+    packages=['gtin_fields'],
+    install_requires=['Django', 'python-stdnum>=1.5', 'six'],
+    zip_safe=False,
     include_package_data=True,
 )

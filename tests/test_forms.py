@@ -1,10 +1,7 @@
 """ Test the forms related to the model. """
-from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.test import TestCase
 
-from gtin_fields import converters
-from gtin_fields.validators import ISBNValidator
 from tests.app.models import MockProduct
 from tests.product_codes import CODES
 
@@ -25,8 +22,6 @@ class FormTestMixin:
         self.key (str): The attribute being updated / created.
     """
     def test_form_valid(self):
-        new_form = ProductForm()
-
         for code in self.code['valid']:
             form = ProductForm({self.key: code})
             self.assertEqual(form.errors, {})
@@ -36,8 +31,6 @@ class FormTestMixin:
             self.assertEqual(getattr(new_product, self.key), code)
 
     def test_form_invalid(self):
-        new_form = ProductForm()
-
         for code in self.code['invalid']:
             form = ProductForm({self.key: code})
             self.assertTrue(self.key in form.errors)

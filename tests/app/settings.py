@@ -5,7 +5,7 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'tests.app',
-    'gtin_fields', # The app with all your test models
+    'gtin_fields',  # The app with all your test models
 
     'django.contrib.auth',
     'django.contrib.contenttypes',

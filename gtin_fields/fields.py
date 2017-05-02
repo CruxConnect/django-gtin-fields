@@ -15,7 +15,9 @@ class ProductCodeFieldBase(CharField):
             dict(
                 max_length=max(self._primary_validator.valid_lengths),
                 verbose_name=self._primary_validator.verbose_object_name,
-                validators=kwargs.get('validators', []) + [self._primary_validator.validate],
+                validators=kwargs.get(
+                    'validators', []
+                ) + [self._primary_validator.validate],
             ),
             **kwargs
         )

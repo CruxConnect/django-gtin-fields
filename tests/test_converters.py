@@ -1,9 +1,7 @@
-from django.core.exceptions import ValidationError
 from django.test import SimpleTestCase
 from stdnum.exceptions import InvalidChecksum
 
 from gtin_fields import converters
-from gtin_fields.validators import ISBNValidator
 
 
 class ConvertersTest(SimpleTestCase):
@@ -68,4 +66,7 @@ class ConvertersTest(SimpleTestCase):
             converters.upce_to_upca(bad_checksum_upce)
 
         # will pass silently if validation turned off:
-        self.assertEqual(converters.upce_to_upca(bad_checksum_upce, validate=False), '042100005266')
+        self.assertEqual(
+            converters.upce_to_upca(bad_checksum_upce, validate=False),
+            '042100005266'
+        )

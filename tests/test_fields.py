@@ -4,8 +4,6 @@ from itertools import zip_longest
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from gtin_fields import converters
-from gtin_fields.validators import ISBNValidator
 from tests.app.models import MockProduct
 from tests.product_codes import CODES
 
@@ -43,7 +41,9 @@ class FieldTestMixin:
             product.full_clean()
             product.save()
 
-        for (code, obj) in zip_longest(self.codes['valid'], MockProduct.objects.all()):
+        for (code, obj) in zip_longest(
+            self.codes['valid'], MockProduct.objects.all()
+        ):
             self.assertEqual(getattr(obj, self.key), code)
 
 
