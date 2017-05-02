@@ -13,6 +13,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+MIDDLEWARE_CLASSES = tuple()
+
 # Obvious rubbish
 SECRET_KEY = 'not a secret'
 
