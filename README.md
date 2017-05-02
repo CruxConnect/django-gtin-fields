@@ -30,7 +30,7 @@ INSTALLED_APPS = (
 )
 ```
 
-Use whichever fields you want in your model.
+Use whichever fields you want in your models.
 
 ```python
 from django.db import models
@@ -38,13 +38,14 @@ from gtin_fields import ISBNField
 
 class Product(models.Model):
 	...
-	isbn = ISBNField()  # ISBN10 or ISBN13
+	isbn = ISBNField()  # ISBN-10 or ISBN-13
     upc = UPCAField()  # UPC-A field (12 digit standard UPC)
     ean = EAN13Field()  # EAN-13
     gtin = GTIN14Field()  # GTIN-14
 
-    # not technically GTIN, but commonly used:
-    asin = ASINField()  # Amazon Standard Identification Number
+    # Amazon Standard Identification Number (not GTIN but related)
+    asin = ASINField()  # 10-digit, alphanumeric
+    asin = ASINField(strict=True)  # ASIN w/ additional standard pattern rules
 ```
 
 Converters can help you coerce from some codes to some other desired codes.
@@ -72,15 +73,11 @@ converters.gtin8_to_gtin14('66425261')  # => '00000066425261' (GTIN-14)
 converters.upca_to_ean13('142100005264')  # => '0142100005264' (EAN-13)
 ```
 
-It will raise ValidationError when the number provided is invalid
+Can also use gtin_fields.validators elsewhere (in DRF, for instance).
 
 ## TODO
 
 * Implement coverage report through tox
-* Finish coverage of converter functions
-* Get rest of validators tested
-* Get all fields working
-* Test all fields
 * Upload to pypi
 
 ## Acknowledgments
