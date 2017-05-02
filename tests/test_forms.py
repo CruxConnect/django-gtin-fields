@@ -1,40 +1,78 @@
+""" Test the forms related to the model. """
 from django.core.exceptions import ValidationError
-from django.test import SimpleTestCase
+from django.forms import ModelForm
+from django.test import TestCase
 
 from gtin_fields import converters
 from gtin_fields.validators import ISBNValidator
-
-# class ConvertersTest(SimpleTestCase):
-    # """ Test the converters. """
-
-    # def test_upce_to_upca(self):
-        # upce_to_upca = {
-            # '425261': '042100005264',
-            # '425211': '042100005219',
-            # '425231': '042100005233',
-            # '425241': '042100005240',
-        # }
-        # for upce, upca in upce_to_upca.items():
-            # self.assertEqual(converters.upce_to_upca(upce), upca)
+from tests.app.models import MockProduct
+from tests.product_codes import CODES
 
 
-# class ISBNValidatorTest(SimpleTestCase):
+class ProductForm(ModelForm):
+    class Meta:
+        model = MockProduct
+        exclude = []
 
-    # def test_calidation(self):
-        # # Short
-        # with self.assertRaises(ValidationError):
-            # ISBNValidator('111')
 
-        # # Long
-        # with self.assertRaises(ValidationError):
-            # ISBNValidator('12345678901234')
+class FormTestMixin:
+    """ Test a GTIN ModelForm.
 
-        # # ISBN w Error
-        # with self.assertRaises(ValidationError):
-            # ISBNValidator('0765348275')
+    Expects:
 
-        # # Valid ISBN10
-        # ISBNValidator('0765348276')
+        self.code (dict): 'valid' and 'invalid' keys, each with a list of
+            valid and invalid codes.
+        self.key (str): The attribute being updated / created.
+    """
+    def test_form_valid(self):
+        new_form = ProductForm()
 
-        # # Valid ISBN13
-        # ISBNValidator('9780765348272')
+        for code in self.code['valid']:
+            form = ProductForm({self.key: code})
+            self.assertEqual(form.errors, {})
+            self.assertTrue(form.is_valid())
+            self.assertEqual(form.cleaned_data[self.key], code)
+            new_product = form.save()
+            self.assertEqual(getattr(new_product, self.key), code)
+
+    def test_form_invalid(self):
+        new_form = ProductForm()
+
+        for code in self.code['invalid']:
+            form = ProductForm({self.key: code})
+            self.assertTrue(self.key in form.errors)
+            self.assertFalse(form.is_valid())
+            for value in form.cleaned_data.values():
+                self.assertEqual(value, '')
+            with self.assertRaises(ValueError):
+                form.save()
+
+
+class ISBNFormTest(TestCase, FormTestMixin):
+    code = CODES['ISBN']
+    key = 'isbn'
+
+
+class UPCAFormTest(TestCase, FormTestMixin):
+    code = CODES['UPCA']
+    key = 'upca'
+
+
+class EAN13FormTest(TestCase, FormTestMixin):
+    code = CODES['EAN13']
+    key = 'ean13'
+
+
+class GTIN14FormTest(TestCase, FormTestMixin):
+    code = CODES['GTIN14']
+    key = 'gtin14'
+
+
+class ASINFormTest(TestCase, FormTestMixin):
+    code = CODES['ASIN']
+    key = 'asin'
+
+
+class ASINStrictFormTest(TestCase, FormTestMixin):
+    code = CODES['ASIN_strict']
+    key = 'asin_strict'

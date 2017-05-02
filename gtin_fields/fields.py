@@ -27,7 +27,7 @@ class ProductCodeFieldBase(CharField):
                 max_length=max(self._primary_validator.valid_lengths),
                 min_length=min(self._primary_validator.valid_lengths),
                 validators=[self._primary_validator.validate],
-            )
+            ),
             **kwargs
         )
         return super().formfield(**new_kwargs)
