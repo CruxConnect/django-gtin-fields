@@ -13,9 +13,8 @@ import re
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy
-from stdnum import isbn
-
 from gtin_fields import gtin
+from stdnum import isbn
 
 
 class AlphaNumCodeValidatorBase:

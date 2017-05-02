@@ -1,5 +1,4 @@
 from django.db.models import CharField
-
 from gtin_fields import validators
 
 

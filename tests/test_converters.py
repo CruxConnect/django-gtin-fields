@@ -1,7 +1,6 @@
 from django.test import SimpleTestCase
-from stdnum.exceptions import InvalidChecksum
-
 from gtin_fields import converters
+from stdnum.exceptions import InvalidChecksum
 
 
 class ConvertersTest(SimpleTestCase):

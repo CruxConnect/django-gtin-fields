@@ -1,6 +1,5 @@
 """ Models for testing. """
 from django.db import models
-
 from gtin_fields import fields
 
 NOT_REQUIRED = dict(null=True, blank=True)

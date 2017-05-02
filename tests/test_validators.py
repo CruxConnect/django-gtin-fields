@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import SimpleTestCase
-
 from gtin_fields import validators
+
 from .product_codes import CODES
 
 
