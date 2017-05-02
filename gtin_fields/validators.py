@@ -1,13 +1,23 @@
 """ Provides validation for common GTIN fields.
 
-Available validators:
+Available validators (ready for use as a django validator which is a function):
 
-    ISBNValidator (ISBN)
-    UPCAValidator (UPC-A / GTIN-12)
-    EANValidator (EAN-13 / GTIN-13)
-    GTIN14Validator (GTIN-14)
-    ASINValidator (Amazon Standard Identification Number, possible values)
-    ASINStrictValidator (ASIN limiting to currently known patterns)
+    ISBNValidatorFunc (ISBN)
+    UPCAValidatorFunc (UPC-A / GTIN-12)
+    EANValidatorFunc (EAN-13 / GTIN-13)
+    GTIN14ValidatorFunc (GTIN-14)
+    ASINValidatorFunc (Amazon Standard Identification Number, possible values)
+    ASINStrictValidatorFunc (ASIN limiting to currently known patterns)
+
+If access to validator attributes is needed then these instances are available
+for use (see .fields for usage):
+
+    ISBNValidator = _ISBNValidator()
+    UPCAValidator = _UPCAValidator()
+    EAN13Validator = _EAN13Validator()
+    GTIN14Validator = _GTIN14Validator()
+    ASINValidator = _ASINValidator()
+    ASINStrictValidator = _ASINValidator(strict=True)
 """
 import re
 
@@ -23,7 +33,7 @@ class AlphaNumCodeValidatorBase:
     Expects the following attributes on self:
 
         verbose_object_name (str): The human readable name of the thing being
-            validated).
+            validated.
         valid_lengths (anything that __contains__): The lengths that are
             valid.
     """

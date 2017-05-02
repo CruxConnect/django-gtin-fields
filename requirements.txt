@@ -1,2 +1,1 @@
 python-stdnum>=1.5
-six>=1.10.0

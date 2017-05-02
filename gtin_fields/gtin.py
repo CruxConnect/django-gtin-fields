@@ -3,7 +3,7 @@
 TODO: This code should be pushed into python-stdnum.  Within python stdnum
 should move ean.py to gtin.py.
 
-The code on this page is nearly identical to the stdnum/ean.py code.
+The code in this file is nearly identical to the stdnum/ean.py code.
 """
 from stdnum.ean import calc_check_digit, compact
 from stdnum.exceptions import (InvalidChecksum, InvalidFormat, InvalidLength,

@@ -77,6 +77,7 @@ Can also use gtin_fields.validators elsewhere (in DRF, for instance).
 
 ## TODO
 
+* Move GTIN-14 validation code upstream to stdnum
 * Implement coverage report through tox
 * Upload to pypi
 
