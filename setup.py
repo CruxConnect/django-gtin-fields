@@ -14,7 +14,21 @@ setup(
 
     license='LPGL',
 
-    keywords=['django', 'gtin', 'upc', 'ean', 'isbn', 'field'],
+    keywords=[
+        'django',
+        'gtin',
+        'upc',
+        'ean',
+        'isbn',
+        'model',
+        'field'
+        'UPC-A',
+        'UPC-E',
+        'EAN-13',
+        'GTIN-14',
+        'ASIN',
+        'Amazon Standard Identification Number',
+    ],
 
     classifiers=[
         'Topic :: Utilities',
@@ -34,7 +48,7 @@ setup(
 
     # Package
     packages=['gtin_fields'],
-    install_requires=['Django', 'python-stdnum>=1.5', 'six'],
+    install_requires=['Django', 'python-stdnum>=1.5'],
     zip_safe=False,
     include_package_data=True,
 )
