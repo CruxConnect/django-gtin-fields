@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='django-gtin-fields',
-    version='0.1.1',
+    version='0.1.2',
     description=str(
         'Provides model fields and validation for GTIN codes '
         '(EAN, UPC, GTIN, ISBN)'
