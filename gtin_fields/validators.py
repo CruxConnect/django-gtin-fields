@@ -22,11 +22,13 @@ for use (see .fields for usage):
 import re
 
 from django.core.exceptions import ValidationError
+from django.utils.deconstruct import deconstructible
 from django.utils.translation import ugettext_lazy
 from gtin_fields import gtin
 from stdnum import isbn
 
 
+@deconstructible
 class AlphaNumCodeValidatorBase:
     """ A generic product code validator.
 
@@ -70,6 +72,7 @@ class AlphaNumCodeValidatorBase:
         )
 
 
+@deconstructible
 class _ASINValidator(AlphaNumCodeValidatorBase):
     """ ASIN (Amazon Standard Identification Number) validator.
 
@@ -97,6 +100,7 @@ class _ASINValidator(AlphaNumCodeValidatorBase):
         super().__init__(*args, **kwargs)
 
 
+@deconstructible
 class GTINValidatorBase(AlphaNumCodeValidatorBase):
     """ Validation base for common GTIN codes.
 
@@ -126,6 +130,7 @@ class GTINValidatorBase(AlphaNumCodeValidatorBase):
             self.invalid(value, 'Failed checksum')
 
 
+@deconstructible
 class _ISBNValidator(GTINValidatorBase):
     """ Check string is a well-formed ISBN number"""
     verbose_object_name = "ISBN"
@@ -133,6 +138,7 @@ class _ISBNValidator(GTINValidatorBase):
     is_valid_checksum = staticmethod(isbn.is_valid)
 
 
+@deconstructible
 class _UPCAValidator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-12 / UPC-A code. """
     verbose_object_name = "UPC-A"
@@ -140,6 +146,7 @@ class _UPCAValidator(GTINValidatorBase):
     is_valid_checksum = staticmethod(gtin.is_valid)
 
 
+@deconstructible
 class _EAN13Validator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-13 / EAN-13 code. """
     verbose_object_name = "EAN-13"
@@ -147,6 +154,7 @@ class _EAN13Validator(GTINValidatorBase):
     is_valid_checksum = staticmethod(gtin.is_valid)
 
 
+@deconstructible
 class _GTIN14Validator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-14 code. """
     verbose_object_name = "GTIN-14"
