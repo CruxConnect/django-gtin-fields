@@ -1,32 +1,25 @@
 """ Provides validation for common GTIN fields.
 
-Available validators (ready for use as a django validator which is a function):
+Available validator instances (ready for use as a django validator which is
+any callable):
 
-    ISBNValidatorFunc (ISBN)
-    UPCAValidatorFunc (UPC-A / GTIN-12)
-    EANValidatorFunc (EAN-13 / GTIN-13)
-    GTIN14ValidatorFunc (GTIN-14)
-    ASINValidatorFunc (Amazon Standard Identification Number, possible values)
-    ASINStrictValidatorFunc (ASIN limiting to currently known patterns)
-
-If access to validator attributes is needed then these instances are available
-for use (see .fields for usage):
-
-    ISBNValidator = _ISBNValidator()
-    UPCAValidator = _UPCAValidator()
-    EAN13Validator = _EAN13Validator()
-    GTIN14Validator = _GTIN14Validator()
-    ASINValidator = _ASINValidator()
-    ASINStrictValidator = _ASINValidator(strict=True)
+    ISBNValidator (ISBN)
+    UPCAValidator (UPC-A / GTIN-12)
+    EANValidator (EAN-13 / GTIN-13)
+    GTIN14Validator (GTIN-14)
+    ASINValidator (Amazon Standard Identification Number, possible values)
+    ASINStrictValidator (ASIN limiting to currently known patterns)
 """
 import re
 
 from django.core.exceptions import ValidationError
+from django.utils.deconstruct import deconstructible
 from django.utils.translation import ugettext_lazy
 from gtin_fields import gtin
 from stdnum import isbn
 
 
+@deconstructible
 class AlphaNumCodeValidatorBase:
     """ A generic product code validator.
 
@@ -40,7 +33,7 @@ class AlphaNumCodeValidatorBase:
     chartype_message = "Only alpha-numeric characters allowed."
     verbose_object_name = "Product Code"
 
-    def validate(self, value):
+    def __call__(self, value):
         """ Validates the given value. """
         self.validate_type(value)
         self.validate_length(value)
@@ -70,6 +63,7 @@ class AlphaNumCodeValidatorBase:
         )
 
 
+@deconstructible
 class _ASINValidator(AlphaNumCodeValidatorBase):
     """ ASIN (Amazon Standard Identification Number) validator.
 
@@ -97,6 +91,7 @@ class _ASINValidator(AlphaNumCodeValidatorBase):
         super().__init__(*args, **kwargs)
 
 
+@deconstructible
 class GTINValidatorBase(AlphaNumCodeValidatorBase):
     """ Validation base for common GTIN codes.
 
@@ -112,9 +107,9 @@ class GTINValidatorBase(AlphaNumCodeValidatorBase):
     """
     chartype_message = "Only numbers allowed."
 
-    def validate(self, value):
+    def __call__(self, value):
         """ Validates the given value. """
-        super().validate(value)
+        super().__call__(value)
         self.valid_checksum(value)
 
     def validate_character_types(self, value):
@@ -126,6 +121,7 @@ class GTINValidatorBase(AlphaNumCodeValidatorBase):
             self.invalid(value, 'Failed checksum')
 
 
+@deconstructible
 class _ISBNValidator(GTINValidatorBase):
     """ Check string is a well-formed ISBN number"""
     verbose_object_name = "ISBN"
@@ -133,6 +129,7 @@ class _ISBNValidator(GTINValidatorBase):
     is_valid_checksum = staticmethod(isbn.is_valid)
 
 
+@deconstructible
 class _UPCAValidator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-12 / UPC-A code. """
     verbose_object_name = "UPC-A"
@@ -140,6 +137,7 @@ class _UPCAValidator(GTINValidatorBase):
     is_valid_checksum = staticmethod(gtin.is_valid)
 
 
+@deconstructible
 class _EAN13Validator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-13 / EAN-13 code. """
     verbose_object_name = "EAN-13"
@@ -147,6 +145,7 @@ class _EAN13Validator(GTINValidatorBase):
     is_valid_checksum = staticmethod(gtin.is_valid)
 
 
+@deconstructible
 class _GTIN14Validator(GTINValidatorBase):
     """ Check string is a well-formed GTIN-14 code. """
     verbose_object_name = "GTIN-14"
@@ -160,11 +159,3 @@ EAN13Validator = _EAN13Validator()
 GTIN14Validator = _GTIN14Validator()
 ASINValidator = _ASINValidator()
 ASINStrictValidator = _ASINValidator(strict=True)
-
-
-ISBNValidatorFunc = ISBNValidator.validate
-UPCAValidatorFunc = UPCAValidator.validate
-EAN13ValidatorFunc = EAN13Validator.validate
-GTIN14ValidatorFunc = GTIN14Validator.validate
-ASINValidatorFunc = ASINValidator.validate
-ASINStrictValidatorFunc = ASINStrictValidator.validate

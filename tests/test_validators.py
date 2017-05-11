@@ -12,35 +12,35 @@ class ValidatorTestMixin:
 
         self.codes (dict): Should have keys 'valid' and 'invalid', each
             pointing to a list of product codes.
-        self.validator_func (callable): The callable that takes the value to be
+        self.validator (callable): The callable that takes the value to be
             validated.
     """
     def test_validation(self):
         for value in self.codes['invalid']:
             with self.assertRaises(ValidationError):
-                self.validator_func(value)
+                self.validator(value)
 
         for value in self.codes['valid']:
-            self.assertIsNone(self.validator_func(value))
+            self.assertIsNone(self.validator(value))
 
 
 class ISBNValidatorTest(SimpleTestCase, ValidatorTestMixin):
     codes = CODES['ISBN']
-    validator_func = validators.ISBNValidatorFunc
+    validator = validators.ISBNValidator
 
 
 class UPCAValidatorTest(SimpleTestCase, ValidatorTestMixin):
-    validator_func = validators.UPCAValidatorFunc
+    validator = validators.UPCAValidator
     codes = CODES['UPCA']
 
 
 class EAN13ValidatorTest(SimpleTestCase, ValidatorTestMixin):
-    validator_func = validators.EAN13ValidatorFunc
+    validator = validators.EAN13Validator
     codes = CODES['EAN13']
 
 
 class GTIN14ValidatorTest(SimpleTestCase, ValidatorTestMixin):
-    validator_func = validators.GTIN14ValidatorFunc
+    validator = validators.GTIN14Validator
     codes = CODES['GTIN14']
 
 
@@ -50,11 +50,11 @@ class ASINValidatorTest(SimpleTestCase, ValidatorTestMixin):
     This is the 'loose' definition of an ASIN (i.e., Amazon could start
     using any codes within the alpha-numeric range).
     """
-    validator_func = validators.ASINValidatorFunc
+    validator = validators.ASINValidator
     codes = CODES['ASIN']
 
 
 class ASINStrictValidatorTest(SimpleTestCase, ValidatorTestMixin):
     """ The ASINStrictValidator must follow conventional ASIN patterns. """
-    validator_func = validators.ASINStrictValidatorFunc
+    validator = validators.ASINStrictValidator
     codes = CODES['ASIN_strict']
