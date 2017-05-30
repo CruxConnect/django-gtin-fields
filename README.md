@@ -25,8 +25,8 @@ Add `gtin_fields` to `INSTALLED_APPS`:
 ```python
 # settings.py
 INSTALLED_APPS = (
-	...
-	'gtin_fields',
+    ...
+    'gtin_fields',
 )
 ```
 
@@ -34,11 +34,11 @@ Use whichever fields you want in your models.
 
 ```python
 from django.db import models
-from gtin_fields import ISBNField
+from gtin_fields.fields import ISBNField
 
 class Product(models.Model):
-	...
-	isbn = ISBNField()  # ISBN-10 or ISBN-13
+    ...
+    isbn = ISBNField()  # ISBN-10 or ISBN-13
     upc = UPCAField()  # UPC-A field (12 digit standard UPC)
     ean = EAN13Field()  # EAN-13
     gtin = GTIN14Field()  # GTIN-14
