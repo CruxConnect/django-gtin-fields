@@ -14,7 +14,7 @@ import re
 
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy as _
 from gtin_fields import gtin
 from stdnum import isbn
 
@@ -59,7 +59,7 @@ class AlphaNumCodeValidatorBase:
 
     def invalid(self, value, problem_description):
         raise ValidationError(
-            ugettext_lazy(self.error_msg(value, problem_description))
+            _(self.error_msg(value, problem_description))
         )
 
 
